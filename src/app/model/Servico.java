@@ -10,6 +10,9 @@ public class Servico {
     private List<Procedimento> procedimentos;
     private LocalDateTime dataHoraAtendimento;
 
+    private static int proximoId = 1;
+
+    private final int idServico;
 
     public Servico(Paciente paciente, Profissional profissional, Procedimento procedimentoInicial) {
         if(paciente == null) {
@@ -18,16 +21,19 @@ public class Servico {
         if(profissional == null) {
             throw new NegocioException("O profissional é obrigatório");
         }
-        this.paciente = paciente;
-        this.profissional = profissional;
         if(procedimentoInicial == null) {
             throw new NegocioException("O procedimento não pode ser null, deve ser informado");
         } else if(procedimentoInicial.getValor() < 0) {
             throw new NegocioException("O valor do procedimento não pode ser negativo");
         } 
 
+        this.paciente = paciente;
+        this.profissional = profissional;
+        this.idServico = proximoId;
         procedimentos = new ArrayList<>();
         procedimentos.add(procedimentoInicial); 
+
+        proximoId++;
     }
 
     public Paciente getPaciente() {

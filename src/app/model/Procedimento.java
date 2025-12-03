@@ -6,6 +6,10 @@ public class Procedimento {
     private String descricao;
     private double valor;
 
+    private static int proximoId = 1;
+
+    private final String codigoProcedimento;
+
     public Procedimento(String nomeProcedimento, double valorProcedimento) {
         if(nomeProcedimento == null) {
             // throw new NegocioException("O nome do procedimento não pode ser vazio");
@@ -15,6 +19,7 @@ public class Procedimento {
         }
         nome = nomeProcedimento;
         valor = valorProcedimento;
+        //codigoProcedimento = "PRO" + String.format(, null)
     }
 
     public void setDescricao(String addDescricao) {
