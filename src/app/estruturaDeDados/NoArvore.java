@@ -1,12 +1,16 @@
 package app.estruturaDeDados;
 
-class NoArvore<T extends Comparable<T>> {
+import app.interfaces.Identificavel;
+
+class NoArvore<T extends Identificavel> {
     private T valor;
+    private String id;
     private NoArvore<T> noEsquerda; // Pela lógica da ABB o nó da esquerda é sempre o menor
     private NoArvore<T> noDireita; // Já o nó da direita é sempre o maior
 
     public NoArvore(T valorDoNo) {
         valor = valorDoNo;
+        id = valorDoNo.getId();
         noEsquerda = null;
         noDireita = null;
     }
@@ -29,5 +33,9 @@ class NoArvore<T extends Comparable<T>> {
 
     public NoArvore<T> getNoDireita() {
         return noDireita;
+    }
+
+    public String getId() {
+        return this.id;
     }
 }

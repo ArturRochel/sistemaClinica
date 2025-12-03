@@ -1,8 +1,9 @@
 package app.estruturaDeDados;
 
 import java.util.function.Consumer;
+import app.interfaces.Identificavel;
 
-public class ArvoreBinaria<T extends Comparable<T>> {
+public class ArvoreBinaria<T extends Identificavel> {
     private NoArvore<T> raiz;
 
     public ArvoreBinaria() {
@@ -20,9 +21,9 @@ public class ArvoreBinaria<T extends Comparable<T>> {
     private NoArvore<T> verificarInserir(NoArvore<T> raizAtual, T novoDado) {
         if (raizAtual == null) {
             return new NoArvore<>(novoDado);
-        } else if (novoDado.compareTo(raizAtual.getValor()) < 0) {
+        } else if (novoDado.getId().compareTo(raizAtual.getId()) < 0) {
             raizAtual.setEsquerda(verificarInserir(raizAtual.getNoEsquerda(), novoDado));
-        } else if (novoDado.compareTo(raizAtual.getValor()) > 0) {
+        } else if (novoDado.getId().compareTo(raizAtual.getId()) > 0) {
             raizAtual.setDireita(verificarInserir(raizAtual.getNoDireita(), novoDado));
         }
         return raizAtual;

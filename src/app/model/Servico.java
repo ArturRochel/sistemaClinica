@@ -3,8 +3,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDateTime;
 import app.excecoes.NegocioException;
+import app.interfaces.Identificavel;
 
-public class Servico {
+public class Servico implements Identificavel {
     private Paciente paciente;
     private Profissional profissional;
     private List<Procedimento> procedimentos;
@@ -12,16 +13,16 @@ public class Servico {
 
     private static int proximoId = 1;
 
-    private final int idServico;
+    private final String codigoServico;
 
     public Servico(Paciente paciente, Profissional profissional, Procedimento procedimentoInicial) {
-        if(paciente == null) {
+        if(paciente == null || paciente.getNome().isBlank()) {
             throw new NegocioException("O paciente é obrigatório");
         } 
-        if(profissional == null) {
+        if(profissional == null || profissional.getNome().isBlank()) {
             throw new NegocioException("O profissional é obrigatório");
         }
-        if(procedimentoInicial == null) {
+        if(procedimentoInicial == null || procedimentoInicial.getNomeProcedimento().isBlank()) {
             throw new NegocioException("O procedimento não pode ser null, deve ser informado");
         } else if(procedimentoInicial.getValor() < 0) {
             throw new NegocioException("O valor do procedimento não pode ser negativo");
@@ -29,11 +30,17 @@ public class Servico {
 
         this.paciente = paciente;
         this.profissional = profissional;
-        this.idServico = proximoId;
+        this.codigoServico = "SERV" + String.format("%02d", proximoId);
         procedimentos = new ArrayList<>();
         procedimentos.add(procedimentoInicial); 
 
+        
         proximoId++;
+    }
+
+    @Override
+    public String getId() {
+        return this.codigoServico;
     }
 
     public Paciente getPaciente() {
@@ -46,7 +53,7 @@ public class Servico {
 
     public void addProcedimento(Procedimento novoProcedimento) {
         if(novoProcedimento == null) {
-            throw new NegocioException("O novo procedimento não pode null");
+            throw new NegocioException("O novo procedimento não pode ser null");
         } else if(novoProcedimento.getValor() < 0) {
             throw new NegocioException("O valor do novo procedimento não pode ser negativo");
         } 
@@ -56,7 +63,7 @@ public class Servico {
 
     public double getValorTotal() {
         // Operação de agregação com stream
-        return procedimentos.stream().mapToDouble(procedimento -> procedimento.getValor()).sum();
+        return procedimentos.stream().mapToDouble(Procedimento::getValor).sum();
     }
 
     public int getQuantidade() {

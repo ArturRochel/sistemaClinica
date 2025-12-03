@@ -1,7 +1,9 @@
 package app.model;
  // import app.excecoes.NegocioException;
 
-public class Procedimento {
+import app.interfaces.Identificavel;
+
+public class Procedimento implements Identificavel {
     private String nome;
     private String descricao;
     private double valor;
@@ -11,7 +13,7 @@ public class Procedimento {
     private final String codigoProcedimento;
 
     public Procedimento(String nomeProcedimento, double valorProcedimento) {
-        if(nomeProcedimento == null) {
+        if(nomeProcedimento == null || nomeProcedimento.isBlank()) {
             // throw new NegocioException("O nome do procedimento não pode ser vazio");
         } 
         if(valorProcedimento < 0) {
@@ -19,7 +21,17 @@ public class Procedimento {
         }
         nome = nomeProcedimento;
         valor = valorProcedimento;
-        //codigoProcedimento = "PRO" + String.format(, null)
+        this.codigoProcedimento = "PROC" + String.format("%02d", proximoId);
+        proximoId++;
+    }
+
+    @Override
+    public String getId() {
+        return this.codigoProcedimento;
+    }
+
+    public String getCodigoProcedimento() {
+        return codigoProcedimento;
     }
 
     public void setDescricao(String addDescricao) {

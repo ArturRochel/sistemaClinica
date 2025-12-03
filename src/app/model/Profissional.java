@@ -1,6 +1,8 @@
 package app.model;
 
-public class Profissional extends Usuario{
+import app.interfaces.Identificavel;
+
+public class Profissional extends Usuario implements Identificavel {
     private String formacao;
     private String matricula;
     
@@ -18,11 +20,11 @@ public class Profissional extends Usuario{
         formacao = attFormacao;
     }
 
-    public String getMatricula() {
-        return matricula;
-    }
-
     public void setMatricula(String attMatricula) {
         matricula = attMatricula;
+    }
+
+    public String getId() {
+        return this.matricula;
     }
 }
