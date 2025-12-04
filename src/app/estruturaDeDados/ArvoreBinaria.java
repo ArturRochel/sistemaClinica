@@ -1,6 +1,8 @@
 package app.estruturaDeDados;
 
 import java.util.function.Consumer;
+
+import app.excecoes.NegocioException;
 import app.interfaces.Identificavel;
 
 public class ArvoreBinaria<T extends Identificavel> {
@@ -10,7 +12,7 @@ public class ArvoreBinaria<T extends Identificavel> {
         raiz = null;
     }
 
-    public void inserirDado(T novoDado) {
+    public void inserirDado(T novoDado) throws NegocioException {
         if (raiz == null) {
             raiz = new NoArvore<>(novoDado);
         } else {
@@ -18,9 +20,11 @@ public class ArvoreBinaria<T extends Identificavel> {
         }
     }
 
-    private NoArvore<T> verificarInserir(NoArvore<T> raizAtual, T novoDado) {
+    private NoArvore<T> verificarInserir(NoArvore<T> raizAtual, T novoDado) throws NegocioException{
         if (raizAtual == null) {
             return new NoArvore<>(novoDado);
+        } else if(novoDado.getId().compareTo(raizAtual.getId()) == 0) {
+            throw new NegocioException("Um dado com este ID já está cadastrado");
         } else if (novoDado.getId().compareTo(raizAtual.getId()) < 0) {
             raizAtual.setEsquerda(verificarInserir(raizAtual.getNoEsquerda(), novoDado));
         } else if (novoDado.getId().compareTo(raizAtual.getId()) > 0) {
@@ -51,6 +55,25 @@ public class ArvoreBinaria<T extends Identificavel> {
             return raizAtual.getValor();
         }
         return minimoRecursivo(raizAtual.getNoEsquerda());
+    }
+
+    public T buscarId(String idBuscado) throws NegocioException {
+        return buscaRecursiva(this.raiz, idBuscado);
+    }
+
+    private T buscaRecursiva(NoArvore<T> noAtual, String idBuscado) throws NegocioException {
+        if(noAtual == null) {
+            throw new NegocioException("ID não encontrado na arvore");
+        }
+
+        int comparador = idBuscado.compareTo(noAtual.getId());
+        if(comparador == 0) {
+            return noAtual.getValor();
+        } else if(comparador < 0) {
+            return buscaRecursiva(noAtual.getNoEsquerda(), idBuscado);
+        } else {
+            return buscaRecursiva(noAtual.getNoDireita(), idBuscado);
+        }
     }
 
     public void percorrerInOrder(Consumer<T> acao) {
