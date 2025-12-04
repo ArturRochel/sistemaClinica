@@ -36,6 +36,6 @@ class NoArvore<T extends Identificavel> {
     }
 
     public String getId() {
-        return this.id;
+        return id;
     }
 }
