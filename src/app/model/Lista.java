@@ -31,9 +31,8 @@ public class Lista<T extends Identificavel> implements Crud<T> {
     }
 
     @Override
-    public boolean removerPorId(String id) {
-        // Tratar exceção
-        return true;
+    public boolean removerPorId(String idRemocao) throws NegocioException {
+        return estruturaDeDados.removerId(idRemocao);
     }
 
     @Override

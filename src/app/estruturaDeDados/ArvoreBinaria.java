@@ -76,6 +76,29 @@ public class ArvoreBinaria<T extends Identificavel> {
         }
     }
 
+    public boolean removerId(String idRemocao) throws NegocioException {
+        this.raiz = remocaoRecursiva(this.raiz, idRemocao);
+        return true;
+    }
+
+    private NoArvore<T> remocaoRecursiva(NoArvore<T> noAtual, String idRemocao) throws NegocioException {
+        if(noAtual == null) {
+            throw new NegocioException("No atual z");
+        }
+
+        int comparador = idRemocao.compareTo(noAtual.getId());
+
+        if(comparador < 0) {
+            return remocaoRecursiva(noAtual.getNoDireita(), idRemocao);
+        } else if(comparador > 0) {
+            return remocaoRecursiva(noAtual.getNoDireita(), idRemocao);
+        } else {
+            if(noAtual.getNoDireita() == null && noAtual.getNoDireita() == null) {
+                return null;
+            }
+        }
+    }
+
     public void percorrerInOrder(Consumer<T> acao) {
         percorrerInOrderRec(raiz, acao);
     }
