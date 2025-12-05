@@ -31,9 +31,20 @@ public class Lista<T extends Identificavel> implements Crud<T> {
     }
 
     @Override
-    public boolean removerPorId(String idRemocao) throws NegocioException {
-        return estruturaDeDados.removerId(idRemocao);
+    public void removerPorId(String idRemocao) throws NegocioException {
+        estruturaDeDados.removerId(idRemocao);
     }
+
+    @Override
+    public void editarNo(String idEdicao) throws NegocioException {
+        estruturaDeDados.editarNoId(idEdicao);
+    }
+
+    //@ Função de referencia para editar
+    //public void editar(String id, Consumer<T> editor) throws NegocioException {
+     //   NoArvore<T> no = buscarNo(id);
+       // editor.accept(no.getValor());
+    /}
 
     @Override
     public T buscarPorId(String idBuscado) throws NegocioException {

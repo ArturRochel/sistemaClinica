@@ -5,7 +5,8 @@ import java.util.List;
 
 public interface Crud<T> {
     boolean adicionar(T elemento) throws NegocioException;
-    boolean removerPorId(String id) throws NegocioException;
+    void removerPorId(String id) throws NegocioException;
+    void editarNo(String id) throws NegocioException;
     T buscarPorId(String id) throws NegocioException;
     List<T> listarTodos();
 }

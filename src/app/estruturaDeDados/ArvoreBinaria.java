@@ -4,6 +4,7 @@ import java.util.function.Consumer;
 
 import app.excecoes.NegocioException;
 import app.interfaces.Identificavel;
+import com.sun.source.tree.ErroneousTree;
 
 public class ArvoreBinaria<T extends Identificavel> {
     private NoArvore<T> raiz;
@@ -58,17 +59,17 @@ public class ArvoreBinaria<T extends Identificavel> {
     }
 
     public T buscarId(String idBuscado) throws NegocioException {
-        return buscaRecursiva(this.raiz, idBuscado);
+        return buscaRecursiva(this.raiz, idBuscado).getValor();
     }
 
-    private T buscaRecursiva(NoArvore<T> noAtual, String idBuscado) throws NegocioException {
+    private NoArvore<T> buscaRecursiva(NoArvore<T> noAtual, String idBuscado) throws NegocioException {
         if(noAtual == null) {
             throw new NegocioException("ID não encontrado na arvore");
         }
 
         int comparador = idBuscado.compareTo(noAtual.getId());
         if(comparador == 0) {
-            return noAtual.getValor();
+            return noAtual;
         } else if(comparador < 0) {
             return buscaRecursiva(noAtual.getNoEsquerda(), idBuscado);
         } else {
@@ -76,27 +77,53 @@ public class ArvoreBinaria<T extends Identificavel> {
         }
     }
 
-    public boolean removerId(String idRemocao) throws NegocioException {
-        this.raiz = remocaoRecursiva(this.raiz, idRemocao);
-        return true;
+    public void removerId(String idRemocao) throws NegocioException {
+        raiz = remocaoRecursiva(this.raiz, idRemocao);
     }
 
     private NoArvore<T> remocaoRecursiva(NoArvore<T> noAtual, String idRemocao) throws NegocioException {
         if(noAtual == null) {
-            throw new NegocioException("No atual z");
+            throw new NegocioException("ID não encontrado na árvore");
         }
 
         int comparador = idRemocao.compareTo(noAtual.getId());
-
         if(comparador < 0) {
-            return remocaoRecursiva(noAtual.getNoDireita(), idRemocao);
+            noAtual.setEsquerda(remocaoRecursiva(noAtual.getNoEsquerda(), idRemocao));
+            return noAtual;
         } else if(comparador > 0) {
-            return remocaoRecursiva(noAtual.getNoDireita(), idRemocao);
+            noAtual.setDireita(remocaoRecursiva(noAtual.getNoDireita(), idRemocao));
+            return noAtual;
         } else {
-            if(noAtual.getNoDireita() == null && noAtual.getNoDireita() == null) {
+            if(noAtual.getNoEsquerda() == null && noAtual.getNoDireita() == null) {
                 return null;
+            } else if(noAtual.getNoEsquerda() != null && noAtual.getNoDireita() == null) {
+                return noAtual.getNoEsquerda();
+            } else if(noAtual.getNoEsquerda() == null && noAtual.getNoDireita() != null) {
+                return noAtual.getNoDireita();
+            } else {
+                // Essa lógica subtitutitui a raiz pelo menor da direita
+                // então volta para tornar null o menor
+                NoArvore<T> menorNoDireita = minDireita(noAtual.getNoDireita());
+                noAtual.setValor(menorNoDireita.getValor());
+                noAtual.setId(menorNoDireita.getId());
+                noAtual.setDireita(remocaoRecursiva(noAtual.getNoDireita(), menorNoDireita.getId()));
+                return noAtual;
             }
         }
+    }
+
+    private NoArvore<T> minDireita(NoArvore<T> raizAtual) {
+        if(raizAtual.getNoEsquerda() == null) {
+            return raizAtual;
+        }
+        return minDireita(raizAtual.getNoEsquerda());
+    }
+
+    public void editarNoId(String idEditar) throws NegocioException {
+        NoArvore<T> noEditado = buscarId(idEditar);
+        // noEditado.setValor();
+        // noEditado.setDireita();
+        // noEditado.setEsquerda();
     }
 
     public void percorrerInOrder(Consumer<T> acao) {

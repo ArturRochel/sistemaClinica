@@ -27,6 +27,14 @@ class NoArvore<T extends Identificavel> {
         return valor;
     }
 
+    public void setValor(T novoValor) {
+        this.valor = novoValor;
+    }
+
+    public void setId(String novoId) {
+        this.id = novoId;
+    }
+
     public NoArvore<T> getNoEsquerda() {
         return noEsquerda;
     }
