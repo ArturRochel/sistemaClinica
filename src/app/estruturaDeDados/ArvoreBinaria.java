@@ -1,10 +1,11 @@
 package app.estruturaDeDados;
 
+import java.util.ArrayList;
 import java.util.function.Consumer;
-
+import java.util.List;
 import app.excecoes.NegocioException;
 import app.interfaces.Identificavel;
-import com.sun.source.tree.ErroneousTree;
+
 
 public class ArvoreBinaria<T extends Identificavel> {
     private NoArvore<T> raiz;
@@ -119,13 +120,6 @@ public class ArvoreBinaria<T extends Identificavel> {
         return minDireita(raizAtual.getNoEsquerda());
     }
 
-    public void editarNoId(String idEditar) throws NegocioException {
-        NoArvore<T> noEditado = buscarId(idEditar);
-        // noEditado.setValor();
-        // noEditado.setDireita();
-        // noEditado.setEsquerda();
-    }
-
     public void percorrerInOrder(Consumer<T> acao) {
         percorrerInOrderRec(raiz, acao);
     }
@@ -135,5 +129,18 @@ public class ArvoreBinaria<T extends Identificavel> {
         percorrerInOrderRec(no.getNoEsquerda(), acao);
         acao.accept(no.getValor());
         percorrerInOrderRec(no.getNoDireita(), acao);
+    }
+
+    public List<T> listarTodos() {
+        List<T> listaTemporaria = new ArrayList<>();
+        listarRecursivamente(this.raiz, listaTemporaria);
+        return listaTemporaria;
+    }
+
+    private void listarRecursivamente(NoArvore<T> noAtual, List<T> lista) {
+        if(noAtual == null) return;
+        listarRecursivamente(noAtual.getNoEsquerda(), lista);
+        lista.add(noAtual.getValor());
+        listarRecursivamente((noAtual.getNoDireita()), lista);
     }
 }

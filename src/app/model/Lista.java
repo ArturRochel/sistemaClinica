@@ -4,20 +4,19 @@ import app.estruturaDeDados.ArvoreBinaria;
 import app.excecoes.NegocioException;
 import app.interfaces.Crud;
 import app.interfaces.Identificavel;
-import java.util.List;
 
-// Uma classe que vai receber uma classe que tem a interface Identificavel e vai implementar a interface Crud
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Comparator;
+
 public class Lista<T extends Identificavel> implements Crud<T> {
-    // Eu preciso implementar os métodos da interface
-    // Utilizar a estrutura de dados da árvore de busca binária
-    // Utilizar o NoArvore para inserir dados
 
     private ArvoreBinaria<T> estruturaDeDados;
     private String nomeLista;
 
     public Lista(String nome) {
         nomeLista = nome;
-        this.estruturaDeDados = new ArvoreBinaria<>();
+        this.estruturaDeDados = new ArvoreBinaria<T>();
     }
 
     @Override // Para inserir eu vou chamar a prórpia estrutura e 
@@ -36,23 +35,71 @@ public class Lista<T extends Identificavel> implements Crud<T> {
     }
 
     @Override
-    public void editarNo(String idEdicao) throws NegocioException {
-        estruturaDeDados.editarNoId(idEdicao);
-    }
-
-    //@ Função de referencia para editar
-    //public void editar(String id, Consumer<T> editor) throws NegocioException {
-     //   NoArvore<T> no = buscarNo(id);
-       // editor.accept(no.getValor());
-    /}
-
-    @Override
     public T buscarPorId(String idBuscado) throws NegocioException {
         return estruturaDeDados.buscarId(idBuscado);
     }
 
     @Override
-    public List<T> listarTodos() {
-        // Tratar exceção
+    public List<T> listarTodos(Comparator<T> comparador) {
+        // Pacientes são ordenados por nome
+        // Profissionais são ordenados por nome
+        // Procedimentos são ordenados por valor
+        // Serviços são ordenados por datas
+        List<T> lista = estruturaDeDados.listarTodos();
+        return mergeSort(lista, comparador);
+    }
+
+    private List<T> mergeSort(List<T> listaDesordenada, Comparator<T> comparador) {
+        // Caso base da recursão quando a lista tem um único item e encontra-se ordenada
+        if(listaDesordenada.size() <= 1) return listaDesordenada;
+
+        // Divide a lista pela metade
+        int meio = listaDesordenada.size() / 2;
+        List<T> esquerda = new ArrayList<>();
+        List<T> direita = new ArrayList<>();
+
+        // Preenche a primeira metade
+        for(int i = 0; i < meio; i++) {
+            esquerda.add(listaDesordenada.get(i));
+        }
+
+        // Preenche a segunda metade
+        for(int i = meio; i < listaDesordenada.size(); i++) {
+            direita.add(listaDesordenada.get(i));
+        }
+
+        // Chama a recursão para organizar as duas metades
+        esquerda = mergeSort(esquerda, comparador);
+        direita = mergeSort(direita, comparador);
+
+        return merge(esquerda, direita, comparador);
+    }
+
+    private List<T> merge(List<T> esquerda, List<T> direita, Comparator<T> comparador) {
+        List<T> listaTemporaria = new ArrayList<>();
+        int i = 0;
+        int j = 0;
+
+        while(i < esquerda.size() && j < direita.size()) {
+            if(comparador.compare(esquerda.get(i), direita.get(j)) < 0) {
+                listaTemporaria.add(esquerda.get(i));
+                i += 1;
+            } else {
+                listaTemporaria.add(direita.get(j));
+                j += 1;
+            }
+        }
+
+        while(i < esquerda.size()) {
+            listaTemporaria.add(esquerda.get(i));
+            i += 1;
+        }
+
+        while(j < direita.size()) {
+            listaTemporaria.add(direita.get(j));
+            j += 1;
+        }
+
+        return listaTemporaria;
     }
 }
