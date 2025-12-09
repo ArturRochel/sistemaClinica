@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDateTime;
 
+import app.annotations.InfoAutor;
 import app.excecoes.NegocioException;
 import app.interfaces.Identificavel;
 
+@InfoAutor(nome = "Artur Rochel", data = "2025-12-09")
 public class Servico implements Identificavel {
     private Paciente paciente;
     private Profissional profissional;

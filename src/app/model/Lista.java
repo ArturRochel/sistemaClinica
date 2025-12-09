@@ -1,5 +1,6 @@
 package app.model;
 
+import app.annotations.InfoAutor;
 import app.estruturaDeDados.ArvoreBinaria;
 import app.excecoes.NegocioException;
 import app.interfaces.Crud;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Comparator;
 
+@InfoAutor(nome = "Artur Rochel", data = "2025-12-09")
 public class Lista<T extends Identificavel> implements Crud<T> {
 
     private final ArvoreBinaria<T> estruturaDeDados;

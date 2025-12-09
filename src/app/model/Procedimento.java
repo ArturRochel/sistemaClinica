@@ -1,8 +1,10 @@
 package app.model;
 // import app.excecoes.NegocioException;
 
+import app.annotations.InfoAutor;
 import app.interfaces.Identificavel;
 
+@InfoAutor(nome = "Artur Rochel", data = "2025-12-09")
 public class Procedimento implements Identificavel {
     private String nome;
     private String descricao;
@@ -12,12 +14,12 @@ public class Procedimento implements Identificavel {
 
     private final String codigoProcedimento;
 
-    public Procedimento(String nomeProcedimento, double valorProcedimento) {
+    public Procedimento(String nomeProcedimento, double valorProcedimento) throws IllegalArgumentException {
         if (nomeProcedimento == null || nomeProcedimento.isBlank()) {
-            // throw new NegocioException("O nome do procedimento não pode ser vazio");
+            throw new IllegalArgumentException("O nome do procedimento não pode ser vazio");
         }
         if (valorProcedimento < 0) {
-            //throw new NegocioException("O valor do procedimento não pode ser negativo");
+            throw new IllegalArgumentException("O valor do procedimento não pode ser negativo");
         }
         nome = nomeProcedimento;
         valor = valorProcedimento;

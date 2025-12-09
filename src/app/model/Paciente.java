@@ -1,7 +1,9 @@
 package app.model;
 
+import app.annotations.InfoAutor;
 import app.interfaces.Identificavel;
 
+@InfoAutor(nome = "Artur Rochel", data = "2025-12-09")
 public class Paciente extends Usuario implements Identificavel {
     private String convenio;
 
