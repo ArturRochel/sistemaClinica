@@ -1,7 +1,9 @@
 package app.model;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDateTime;
+
 import app.excecoes.NegocioException;
 import app.interfaces.Identificavel;
 
@@ -15,26 +17,26 @@ public class Servico implements Identificavel {
 
     private final String codigoServico;
 
-    public Servico(Paciente paciente, Profissional profissional, Procedimento procedimentoInicial) throws NegocioException {
-        if(paciente == null || paciente.getNome().isBlank()) {
-            throw new NegocioException("O paciente é obrigatório");
-        } 
-        if(profissional == null || profissional.getNome().isBlank()) {
-            throw new NegocioException("O profissional é obrigatório");
+    public Servico(Paciente paciente, Profissional profissional, Procedimento procedimentoInicial) throws IllegalArgumentException {
+        if (paciente == null || paciente.getNome().isBlank()) {
+            throw new IllegalArgumentException("O paciente é obrigatório");
         }
-        if(procedimentoInicial == null || procedimentoInicial.getNomeProcedimento().isBlank()) {
-            throw new NegocioException("O procedimento não pode ser null, deve ser informado");
-        } else if(procedimentoInicial.getValor() < 0) {
-            throw new NegocioException("O valor do procedimento não pode ser negativo");
-        } 
+        if (profissional == null || profissional.getNome().isBlank()) {
+            throw new IllegalArgumentException("O profissional é obrigatório");
+        }
+        if (procedimentoInicial == null || procedimentoInicial.getNomeProcedimento().isBlank()) {
+            throw new IllegalArgumentException("O procedimento não pode ser null, deve ser informado");
+        } else if (procedimentoInicial.getValor() < 0) {
+            throw new IllegalArgumentException("O valor do procedimento não pode ser negativo");
+        }
 
         this.paciente = paciente;
         this.profissional = profissional;
         this.codigoServico = "SERV" + String.format("%02d", proximoId);
         procedimentos = new ArrayList<>();
-        procedimentos.add(procedimentoInicial); 
+        procedimentos.add(procedimentoInicial);
 
-        
+
         proximoId++;
     }
 
@@ -52,11 +54,11 @@ public class Servico implements Identificavel {
     }
 
     public void addProcedimento(Procedimento novoProcedimento) throws NegocioException {
-        if(novoProcedimento == null) {
+        if (novoProcedimento == null) {
             throw new NegocioException("O novo procedimento não pode ser null");
-        } else if(novoProcedimento.getValor() < 0) {
+        } else if (novoProcedimento.getValor() < 0) {
             throw new NegocioException("O valor do novo procedimento não pode ser negativo");
-        } 
+        }
 
         procedimentos.add(novoProcedimento);
     }
@@ -72,14 +74,19 @@ public class Servico implements Identificavel {
 
     public void setDataHoraAtendimento(LocalDateTime novaData) throws NegocioException {
         LocalDateTime agora = LocalDateTime.now();
-        if(novaData.isBefore(agora)) {
+        if (novaData.isBefore(agora)) {
             throw new NegocioException("A data do serviço não pode ser anterior a data atual");
-        } 
-        
+        }
+
         dataHoraAtendimento = novaData;
     }
 
     public LocalDateTime getDataHoraAtendimento() {
         return dataHoraAtendimento;
+    }
+
+    @Override
+    public String toString() {
+        return "Serviço: " + codigoServico + " / " + paciente + " / " + profissional + " / " + procedimentos + "\n";
     }
 }

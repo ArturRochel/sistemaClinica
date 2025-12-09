@@ -55,7 +55,7 @@ public class Lista<T extends Identificavel> implements Crud<T> {
 
     private List<T> mergeSort(List<T> listaDesordenada, Comparator<T> comparador) {
         // Caso base da recursão quando a lista tem um único item e encontra-se ordenada
-        if(listaDesordenada.size() <= 1) return listaDesordenada;
+        if (listaDesordenada.size() <= 1) return listaDesordenada;
 
         // Divide a lista pela metade
         int meio = listaDesordenada.size() / 2;
@@ -63,12 +63,12 @@ public class Lista<T extends Identificavel> implements Crud<T> {
         List<T> direita = new ArrayList<>();
 
         // Preenche a primeira metade
-        for(int i = 0; i < meio; i++) {
+        for (int i = 0; i < meio; i++) {
             esquerda.add(listaDesordenada.get(i));
         }
 
         // Preenche a segunda metade
-        for(int i = meio; i < listaDesordenada.size(); i++) {
+        for (int i = meio; i < listaDesordenada.size(); i++) {
             direita.add(listaDesordenada.get(i));
         }
 
@@ -84,8 +84,8 @@ public class Lista<T extends Identificavel> implements Crud<T> {
         int i = 0;
         int j = 0;
 
-        while(i < esquerda.size() && j < direita.size()) {
-            if(comparador.compare(esquerda.get(i), direita.get(j)) < 0) {
+        while (i < esquerda.size() && j < direita.size()) {
+            if (comparador.compare(esquerda.get(i), direita.get(j)) < 0) {
                 listaTemporaria.add(esquerda.get(i));
                 i += 1;
             } else {
@@ -94,12 +94,12 @@ public class Lista<T extends Identificavel> implements Crud<T> {
             }
         }
 
-        while(i < esquerda.size()) {
+        while (i < esquerda.size()) {
             listaTemporaria.add(esquerda.get(i));
             i += 1;
         }
 
-        while(j < direita.size()) {
+        while (j < direita.size()) {
             listaTemporaria.add(direita.get(j));
             j += 1;
         }

@@ -5,7 +5,7 @@ import app.interfaces.Identificavel;
 public class Profissional extends Usuario implements Identificavel {
     private String formacao;
     private String matricula;
-    
+
     public Profissional(String cpf, String nome, int idade, String novaFormacao, String novaMatricula) {
         super(cpf, nome, idade);
         formacao = novaFormacao;
@@ -26,5 +26,10 @@ public class Profissional extends Usuario implements Identificavel {
 
     public String getId() {
         return this.matricula;
+    }
+
+    @Override
+    public String toString() {
+        return "Profissional: " + getNome() + " / Formação: " + formacao + "\n";
     }
 }

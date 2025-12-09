@@ -1,10 +1,14 @@
 package app.main;
+
 import app.excecoes.NegocioException;
 import app.model.Lista;
 import app.model.Paciente;
 import app.model.Procedimento;
 import app.model.Profissional;
 import app.model.Servico;
+
+import java.util.ArrayList;
+import java.util.Comparator;
 
 public class Main {
     public static void main(String[] args) {
@@ -21,7 +25,7 @@ public class Main {
 
         // Criação dos médicos
         Profissional ricardo = new Profissional("112.564.345-34", "Ricardo Monteiro", 50, "Ortopedista", "MAT202502");
-        Profissional ana = new Profissional("457.234.098-34", "Ana Paula", 76, "Enfermage", "MAT202503");
+        Profissional ana = new Profissional("457.234.098-34", "Ana Paula", 76, "Enfermagem", "MAT202503");
         Profissional beatriz = new Profissional("707.874.323-34", "Ana Beatriz", 21, "Terapeuta Ocupacional", "MAT202501");
 
         // Criação dos procedimentos
@@ -31,23 +35,10 @@ public class Main {
         Procedimento terapia = new Procedimento("Terapia Ocupacional", 750.00);
 
         // Criação dos serviços
-        try {
-            Servico serv01 = new Servico(gil, ricardo, raioX);
-        } catch (NegocioException e) {
-            System.out.println("Erro ao tentar criar o serviço 01: " + e.getMessage());
-        }
+        Servico serv01 = new Servico(gil, ricardo, raioX);
+        Servico serv02 = new Servico(artur, beatriz, terapia);
+        Servico serv03 = new Servico(bia, beatriz, terapia);
 
-        try {
-            Servico serv02 = new Servico(artur, beatriz, terapia);
-        } catch (NegocioException e) {
-            System.out.println("Erro ao tentar criar o serviço 02: " + e.getMessage());
-        }
-
-        try {
-            Servico serv03 = new Servico(bia, beatriz, terapia);
-        } catch (NegocioException e) {
-            System.out.println("Erro ao adicionar o serviço 03: " + e.getMessage());
-        }
 
         // Adicionar elementos as suas respectivas listas
         try {
@@ -127,5 +118,10 @@ public class Main {
         } catch (NegocioException e) {
             System.out.println("Erro ao adicionar o terceiro serviço: " + e.getMessage());
         }
+
+        //System.out.println(listaDePacientes.listarTodos(Comparator.comparing(Paciente::getNome)));
+        //System.out.println(listaDeProfissionais.listarTodos(Comparator.comparing(Profissional::getFormacao)));
+        //System.out.println(listaDeProcedimentos.listarTodos(Comparator.comparing(Procedimento::getValor)));
+        //System.out.println(listaDeServicos.listarTodos(Comparator.comparing(Servico::getDataHoraAtendimento)));
     }
 }

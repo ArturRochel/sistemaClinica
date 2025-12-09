@@ -1,5 +1,5 @@
 package app.model;
- // import app.excecoes.NegocioException;
+// import app.excecoes.NegocioException;
 
 import app.interfaces.Identificavel;
 
@@ -13,11 +13,11 @@ public class Procedimento implements Identificavel {
     private final String codigoProcedimento;
 
     public Procedimento(String nomeProcedimento, double valorProcedimento) {
-        if(nomeProcedimento == null || nomeProcedimento.isBlank()) {
+        if (nomeProcedimento == null || nomeProcedimento.isBlank()) {
             // throw new NegocioException("O nome do procedimento não pode ser vazio");
-        } 
-        if(valorProcedimento < 0) {
-             //throw new NegocioException("O valor do procedimento não pode ser negativo");
+        }
+        if (valorProcedimento < 0) {
+            //throw new NegocioException("O valor do procedimento não pode ser negativo");
         }
         nome = nomeProcedimento;
         valor = valorProcedimento;
@@ -56,5 +56,10 @@ public class Procedimento implements Identificavel {
 
     public double getValor() {
         return valor;
+    }
+
+    @Override
+    public String toString() {
+        return "Procedimento: " + nome + " / Valor: R$" + valor + "\n";
     }
 }
