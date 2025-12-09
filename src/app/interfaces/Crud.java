@@ -1,6 +1,7 @@
 package app.interfaces;
 
 import app.excecoes.NegocioException;
+import java.util.Comparator;
 import java.util.List;
 
 public interface Crud<T> {
@@ -8,5 +9,5 @@ public interface Crud<T> {
     void removerPorId(String id) throws NegocioException;
     //void editarNo(String id) throws NegocioException;
     T buscarPorId(String id) throws NegocioException;
-    List<T> listarTodos();
+    List<T> listarTodos(Comparator<T> comparador);
 }

@@ -15,7 +15,7 @@ public class Servico implements Identificavel {
 
     private final String codigoServico;
 
-    public Servico(Paciente paciente, Profissional profissional, Procedimento procedimentoInicial) {
+    public Servico(Paciente paciente, Profissional profissional, Procedimento procedimentoInicial) throws NegocioException {
         if(paciente == null || paciente.getNome().isBlank()) {
             throw new NegocioException("O paciente é obrigatório");
         } 
@@ -51,7 +51,7 @@ public class Servico implements Identificavel {
         return profissional;
     }
 
-    public void addProcedimento(Procedimento novoProcedimento) {
+    public void addProcedimento(Procedimento novoProcedimento) throws NegocioException {
         if(novoProcedimento == null) {
             throw new NegocioException("O novo procedimento não pode ser null");
         } else if(novoProcedimento.getValor() < 0) {
@@ -70,7 +70,7 @@ public class Servico implements Identificavel {
         return procedimentos.size();
     }
 
-    public void setDataHoraAtendimento(LocalDateTime novaData) {
+    public void setDataHoraAtendimento(LocalDateTime novaData) throws NegocioException {
         LocalDateTime agora = LocalDateTime.now();
         if(novaData.isBefore(agora)) {
             throw new NegocioException("A data do serviço não pode ser anterior a data atual");

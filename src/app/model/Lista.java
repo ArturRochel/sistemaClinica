@@ -11,12 +11,16 @@ import java.util.Comparator;
 
 public class Lista<T extends Identificavel> implements Crud<T> {
 
-    private ArvoreBinaria<T> estruturaDeDados;
-    private String nomeLista;
+    private final ArvoreBinaria<T> estruturaDeDados;
+    private final String nomeLista;
 
     public Lista(String nome) {
-        nomeLista = nome;
-        this.estruturaDeDados = new ArvoreBinaria<T>();
+        this.nomeLista = nome;
+        this.estruturaDeDados = new ArvoreBinaria<>();
+    }
+
+    public String getNome() {
+        return this.nomeLista;
     }
 
     @Override // Para inserir eu vou chamar a prórpia estrutura e 
