@@ -133,97 +133,342 @@ public class Main {
     }
 
     //@ Métodos Menu
-    private static void menuPrincipal(Lista<Paciente> listaPacientes, Lista<Profissional> listaProfissionais, Lista<Procedimento> listaProcedimentos, Lista<Servico> listaServicos) {
+    private static void menuPrincipal(Lista<Paciente> listaPacientes,
+                                      Lista<Profissional> listaProfissionais,
+                                      Lista<Procedimento> listaProcedimentos,
+                                      Lista<Servico> listaServicos) {
         Scanner entradaSistema = new Scanner(System.in);
         int opcao = -1;
 
-        System.out.println("Bem vindo ao sistema da Clínica Pro");
-        System.out.println("Escolha uma das opções a baixo para contiar: ");
-
-
         while (opcao != 0) {
             System.out.println("""
-                    --- MENU PRINCIPAL ---
-                    1 - Pacientes
-                    2 - Profssionais
-                    3 - Procedimentos
-                    4 - Serviços
-                    0 - Sair
-                    """);
+                --- MENU PRINCIPAL ---
+                1 - Pacientes
+                2 - Profissionais
+                3 - Procedimentos
+                4 - Serviços
+                5 - Info do Autor (@InfoAutor)
+                0 - Sair
+                """);
 
             opcao = entradaSistema.nextInt();
+            entradaSistema.nextLine();
+
             switch (opcao) {
-                case 1:
-                    System.out.println("Entrando no modulo de pacientes...");
-                    // chama menuPacientes(listaPacientes);
-                    break;
-                case 2:
-                    System.out.println("Entrando no modulo de profissionais...");
-                    // chama menuProfissionais(listaProfissionais);
-                    break;
-                case 3:
-                    System.out.println("Entrando no modulo de procedimentos...");
-                    // chama menuProcedimentos(listaProcedimentos);
-                    break;
-                case 4:
-                    System.out.println("Entrando no modulo de serviços...");
-                    // chama menuServicos(listaServicos);
-                    break;
-                case 0:
-                    System.out.println("Saindo do sistema...");
-                    break;
-                default:
-                    System.out.println("Opção inválida! Digite um dos número abaixo.");
+                case 1 -> menuPacientes(listaPacientes);
+                case 2 -> menuProfissionais(listaProfissionais);
+                case 3 -> menuProcedimentos(listaProcedimentos);
+                case 4 -> menuServicos(listaServicos, listaPacientes,
+                        listaProfissionais, listaProcedimentos);
+                case 5 -> menuInfoAutor();
+                case 0 -> System.out.println("Saindo do sistema...");
+                default -> System.out.println("Opção inválida! Digite um dos números abaixo.");
             }
         }
     }
 
     private static void menuPacientes(Lista<Paciente> listaPacientes) {
-        Scanner entradaPaciente = new Scanner(System.in);
+        Scanner sc = new Scanner(System.in);
         int opcao = -1;
 
         while (opcao != 0) {
             System.out.println("""
-                        --- Menu Pacientes ---
-                        1 - Listar
-                        2 - Buscar
-                        3 - Adicionar
-                        4 - Remover
-                        0 - Voltar
-                    """);
+                --- MENU PACIENTES ---
+                1 - Listar
+                2 - Buscar por CPF
+                3 - Adicionar
+                4 - Remover por CPF
+                0 - Voltar
+                """);
 
-            opcao = entradaPaciente.nextInt();
-            entradaPaciente.nextLine();
+            opcao = sc.nextInt();
+            sc.nextLine(); // consumir \n
+
             switch (opcao) {
-                case 1:
-                    System.out.println(listaPacientes.listarTodos(Comparator.comparing(Paciente::getNome)));
-                    break;
-                case 2:
-                    System.out.println("Digite o CPF do paciente: ");
-                    break;
-                case 3:
-                    System.out.println("Adicione um paciente com NOME, CPF, ...");
-                    break;
-                case 4:
-                    System.out.println("Digite o cpf do paciente que deseja remover");
-                    break;
-                case 0:
-                    System.out.println("Voltando para o menu principal...");
-                    break;
-                default:
-                    System.out.println("Digite umas das opções listadas");
+                case 1 -> {
+                    var pacientesOrdenados = listaPacientes
+                            .listarTodos(Comparator.comparing(Paciente::getNome));
+                    System.out.println(pacientesOrdenados);
+                }
+                case 2 -> {
+                    System.out.print("CPF do paciente: ");
+                    String cpf = sc.nextLine();
+                    try {
+                        Paciente p = listaPacientes.buscarPorId(cpf);
+                        System.out.println("Encontrado: " + p);
+                    } catch (NegocioException e) {
+                        System.out.println("Erro ao buscar paciente: " + e.getMessage());
+                    }
+                }
+                case 3 -> {
+                    System.out.print("Nome: ");
+                    String nome = sc.nextLine();
+                    System.out.print("CPF: ");
+                    String cpf = sc.nextLine();
+                    System.out.print("Idade: ");
+                    int idade = sc.nextInt();
+                    sc.nextLine(); // consumir \n
+                    System.out.print("Convênio: ");
+                    String convenio = sc.nextLine();
+
+                    Paciente novo = new Paciente(cpf, nome, idade, convenio);
+                    try {
+                        boolean ok = listaPacientes.adicionar(novo);
+                        if (ok) {
+                            System.out.println("Paciente cadastrado com sucesso!");
+                        } else {
+                            System.out.println("Paciente não pôde ser cadastrado (ID duplicado?).");
+                        }
+                    } catch (NegocioException e) {
+                        System.out.println("Erro ao cadastrar paciente: " + e.getMessage());
+                    }
+                }
+                case 4 -> {
+                    System.out.print("CPF do paciente a remover: ");
+                    String cpfRemover = sc.nextLine();
+                    try {
+                        listaPacientes.removerPorId(cpfRemover);
+                        System.out.println("Paciente removido com sucesso.");
+                    } catch (NegocioException e) {
+                        System.out.println("Erro ao remover paciente: " + e.getMessage());
+                    }
+                }
+                case 0 -> System.out.println("Voltando para o menu principal...");
+                default -> System.out.println("Digite uma das opções listadas.");
             }
         }
     }
 
-    private static void menuProfissionais() {
+
+    private static void menuProfissionais(Lista<Profissional> listaProfissionais) {
+        Scanner sc = new Scanner(System.in);
+        int opcao = -1;
+
+        while (opcao != 0) {
+            System.out.println("""
+                --- MENU PROFISSIONAIS ---
+                1 - Listar
+                2 - Buscar por matrícula
+                3 - Adicionar
+                4 - Remover por matrícula
+                0 - Voltar
+                """);
+
+            opcao = sc.nextInt();
+            sc.nextLine();
+
+            switch (opcao) {
+                case 1 -> {
+                    var profissionaisOrdenados = listaProfissionais
+                            .listarTodos(Comparator.comparing(Profissional::getNome));
+                    System.out.println(profissionaisOrdenados);
+                }
+                case 2 -> {
+                    System.out.print("Matrícula do profissional: ");
+                    String matricula = sc.nextLine();
+                    try {
+                        Profissional p = listaProfissionais.buscarPorId(matricula);
+                        System.out.println("Encontrado: " + p);
+                    } catch (NegocioException e) {
+                        System.out.println("Erro ao buscar profissional: " + e.getMessage());
+                    }
+                }
+                case 3 -> {
+                    System.out.print("Nome: ");
+                    String nome = sc.nextLine();
+                    System.out.print("CPF: ");
+                    String cpf = sc.nextLine();
+                    System.out.print("Idade: ");
+                    int idade = sc.nextInt();
+                    sc.nextLine();
+                    System.out.print("Formação: ");
+                    String formacao = sc.nextLine();
+                    System.out.print("Matrícula: ");
+                    String matricula = sc.nextLine();
+
+                    Profissional novo = new Profissional(cpf, nome, idade, formacao, matricula);
+                    try {
+                        boolean ok = listaProfissionais.adicionar(novo);
+                        if (ok) {
+                            System.out.println("Profissional cadastrado com sucesso!");
+                        } else {
+                            System.out.println("Profissional não pôde ser cadastrado (ID duplicado?).");
+                        }
+                    } catch (NegocioException e) {
+                        System.out.println("Erro ao cadastrar profissional: " + e.getMessage());
+                    }
+                }
+                case 4 -> {
+                    System.out.print("Matrícula do profissional a remover: ");
+                    String matriculaRemover = sc.nextLine();
+                    try {
+                        listaProfissionais.removerPorId(matriculaRemover);
+                        System.out.println("Profissional removido com sucesso.");
+                    } catch (NegocioException e) {
+                        System.out.println("Erro ao remover profissional: " + e.getMessage());
+                    }
+                }
+                case 0 -> System.out.println("Voltando para o menu principal...");
+                default -> System.out.println("Digite uma das opções listadas.");
+            }
+        }
     }
 
-    private static void menuProcedimentos() {
+
+    private static void menuProcedimentos(Lista<Procedimento> listaProcedimentos) {
+        Scanner sc = new Scanner(System.in);
+        int opcao = -1;
+
+        while (opcao != 0) {
+            System.out.println("""
+                --- MENU PROCEDIMENTOS ---
+                1 - Listar
+                2 - Buscar por código
+                3 - Adicionar
+                4 - Remover por código
+                0 - Voltar
+                """);
+
+            opcao = sc.nextInt();
+            sc.nextLine();
+
+            switch (opcao) {
+                case 1 -> {
+                    var procedimentosOrdenados = listaProcedimentos
+                            .listarTodos(Comparator.comparing(Procedimento::getValor));
+                    System.out.println(procedimentosOrdenados);
+                }
+                case 2 -> {
+                    System.out.print("Código do procedimento: ");
+                    String codigo = sc.nextLine();
+                    try {
+                        Procedimento p = listaProcedimentos.buscarPorId(codigo);
+                        System.out.println("Encontrado: " + p);
+                    } catch (NegocioException e) {
+                        System.out.println("Erro ao buscar procedimento: " + e.getMessage());
+                    }
+                }
+                case 3 -> {
+                    System.out.print("Nome do procedimento: ");
+                    String nome = sc.nextLine();
+                    System.out.print("Valor: ");
+                    double valor = sc.nextDouble();
+                    sc.nextLine();
+
+                    Procedimento novo = new Procedimento(nome, valor);
+                    try {
+                        boolean ok = listaProcedimentos.adicionar(novo);
+                        if (ok) {
+                            System.out.println("Procedimento cadastrado com sucesso!");
+                        } else {
+                            System.out.println("Procedimento não pôde ser cadastrado (ID duplicado?).");
+                        }
+                    } catch (NegocioException e) {
+                        System.out.println("Erro ao cadastrar procedimento: " + e.getMessage());
+                    }
+                }
+                case 4 -> {
+                    System.out.print("Código do procedimento a remover: ");
+                    String codigoRemover = sc.nextLine();
+                    try {
+                        listaProcedimentos.removerPorId(codigoRemover);
+                        System.out.println("Procedimento removido com sucesso.");
+                    } catch (NegocioException e) {
+                        System.out.println("Erro ao remover procedimento: " + e.getMessage());
+                    }
+                }
+                case 0 -> System.out.println("Voltando para o menu principal...");
+                default -> System.out.println("Digite uma das opções listadas.");
+            }
+        }
     }
 
-    private static void menuServicos() {
+
+    private static void menuServicos(Lista<Servico> listaServicos,
+                                     Lista<Paciente> listaPacientes,
+                                     Lista<Profissional> listaProfissionais,
+                                     Lista<Procedimento> listaProcedimentos) {
+        Scanner entradaServico = new Scanner(System.in);
+        int opcao = -1;
+
+        while (opcao != 0) {
+            System.out.println("""
+                --- MENU SERVIÇOS ---
+                1 - Listar
+                2 - Buscar
+                3 - Adicionar
+                4 - Remover
+                0 - Voltar
+                """);
+
+            opcao = entradaServico.nextInt();
+            entradaServico.nextLine(); // consumir \n
+
+            switch (opcao) {
+                case 1 -> {
+                    var servicosOrdenados = listaServicos
+                            .listarTodos(Comparator.comparing(Servico::getValorTotal));
+                    System.out.println(servicosOrdenados);
+                }
+                case 2 -> {
+                    System.out.print("Digite o código do serviço (SERV..): ");
+                    String codigo = entradaServico.nextLine();
+                    try {
+                        Servico s = listaServicos.buscarPorId(codigo);
+                        System.out.println("Serviço encontrado: " + s);
+                    } catch (NegocioException e) {
+                        System.out.println("Erro ao buscar serviço: " + e.getMessage());
+                    }
+                }
+                case 3 -> {
+                    try {
+                        // escolher paciente
+                        System.out.print("CPF do paciente: ");
+                        String cpfPaciente = entradaServico.nextLine();
+                        Paciente paciente = listaPacientes.buscarPorId(cpfPaciente);
+
+                        // escolher profissional
+                        System.out.print("Matrícula do profissional: ");
+                        String matProf = entradaServico.nextLine();
+                        Profissional profissional = listaProfissionais.buscarPorId(matProf);
+
+                        // escolher procedimento
+                        System.out.print("Código do procedimento (PROC..): ");
+                        String codProc = entradaServico.nextLine();
+                        Procedimento procedimento = listaProcedimentos.buscarPorId(codProc);
+
+                        // criar serviço
+                        Servico novoServico = new Servico(paciente, profissional, procedimento);
+
+                        boolean ok = listaServicos.adicionar(novoServico);
+                        if (ok) {
+                            System.out.println("Serviço cadastrado com sucesso! Código: " + novoServico.getId());
+                        } else {
+                            System.out.println("Serviço não pôde ser cadastrado (ID duplicado?).");
+                        }
+
+                    } catch (NegocioException e) {
+                        System.out.println("Erro ao cadastrar serviço: " + e.getMessage());
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("Dados inválidos ao criar o serviço: " + e.getMessage());
+                    }
+                }
+                case 4 -> {
+                    System.out.print("Digite o código do serviço que deseja remover: ");
+                    String codigoRemover = entradaServico.nextLine();
+                    try {
+                        listaServicos.removerPorId(codigoRemover);
+                        System.out.println("Serviço removido com sucesso.");
+                    } catch (NegocioException e) {
+                        System.out.println("Erro ao remover serviço: " + e.getMessage());
+                    }
+                }
+                case 0 -> System.out.println("Voltando para o menu principal...");
+                default -> System.out.println("Digite uma das opções listadas.");
+            }
+        }
     }
+
 
     //@ Annotation Autor
     private static void imprimirInfoAutor(Class<?> clazz) {
@@ -234,4 +479,14 @@ public class Main {
             System.out.println();
         }
     }
+
+    private static void menuInfoAutor() {
+        System.out.println("--- Informações de Autor (@InfoAutor) ---");
+        imprimirInfoAutor(Paciente.class);
+        imprimirInfoAutor(Profissional.class);
+        imprimirInfoAutor(Procedimento.class);
+        imprimirInfoAutor(Servico.class);
+        imprimirInfoAutor(Lista.class);
+    }
+
 }

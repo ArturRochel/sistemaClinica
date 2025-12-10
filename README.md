@@ -29,4 +29,4 @@ O projeto utiliza um `Makefile` para facilitar a compilação e execução. Abra
 Para compilar o código e iniciar a aplicação imediatamente:
 
 ```bash
-make ru
+make run
